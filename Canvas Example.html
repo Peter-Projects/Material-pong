@@ -3,90 +3,89 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <title>Canvas Example</title>
   <script type="text/javascript">
-const filled = {
-  x: 30,
-  y: 0,
-  dx: 10,
-  dy: 1,
-  width: 20,
-  height: 20,
-  background: 'red',
-}
+    const filled = {
+      x: 30,
+      y: 0,
+      dx: 10,
+      dy: 1,
+      width: 20,
+      height: 20,
+      background: 'red',
+    }
 
-const square = {
-  x: 50,
-  y: 80,
-  dx: 5,
-  dy: -1,
-  width: 20,
-  height: 20,
-  color: 'green',
-}
+    const square = {
+      x: 50,
+      y: 80,
+      dx: 5,
+      dy: -1,
+      width: 20,
+      height: 20,
+      color: 'green',
+    }
 
-const onmousedown = (event) => {
-  document.getElementById("info").innerHTML = `clicked on ${event.clientX} / ${event.clientY}`;
-}
-const onkeydown = (event) => {
-  document.getElementById("info").innerHTML = `pressed key ${event.keyCode}`;
-  if (event.keyCode == 38)
-  filled.y -= 20;
-  if (event.keyCode == 40)
-  filled.y += 20;
-}
+    const onmousedown = (event) => {
+      document.getElementById("info").innerHTML = `clicked on ${event.clientX} / ${event.clientY}`;
+    }
+    const onkeydown = (event) => {
+      document.getElementById("info").innerHTML = `pressed key ${event.keyCode}`;
+      if (event.keyCode == 38)
+        filled.y -= 20;
+      if (event.keyCode == 40)
+        filled.y += 20;
+    }
 
+    const draw = () => {
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d", {alpha: false}); // 2d context for painting
 
-const draw = () => {
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d", {alpha: false}); // 2d context for painting
+      // canvas background fill color
+      ctx.fillStyle = "lightyellow";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // canvas background fill color
-  ctx.fillStyle = "lightyellow";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // red square
+      ctx.fillStyle = filled.background;
+      ctx.fillRect(filled.x, filled.y, filled.width, filled.height);
 
-  // red square
-  ctx.fillStyle = filled.background;
-  ctx.fillRect(filled.x, filled.y, filled.width, filled.height);
+      // green square without fill color
+      ctx.beginPath();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = square.color;
+      ctx.rect(square.x, square.y, square.width, square.height);
+      ctx.stroke()
 
-  // green square without fill color
-  ctx.beginPath();
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = square.color;
-  ctx.rect(square.x, square.y, square.width, square.height);
-  ctx.stroke()
+      drawLine( ctx, [10, 10], [100, 150], '#faa', 5);
 
-  drawLine( ctx, [10, 10], [100, 150], '#faa', 5);
+      // move squares
+      filled.x = filled.x + filled.dx;
+      filled.y = filled.y + filled.dy;
+      square.x = square.x + square.dx;
+      square.y = square.y + square.dy;
 
-  // move squares
-  filled.x = filled.x + filled.dx;
-  filled.y = filled.y + filled.dy;
-  square.x = square.x + square.dx;
-  square.y = square.y + square.dy;
+      if ( filled.x > 200 || filled.x < 10 ) {
+        filled.dx = -filled.dx;
+      }
+    }
 
-  if ( filled.x > 200 || filled.x < 10 ) {
-    filled.dx = -filled.dx;
-  }
-}
+    // drawLine(ctx, [x1, y1], [x2, y2], 'green', 2)
+    const drawLine = (ctx, begin, end, stroke = 'black', width = 1) => {
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+      }
 
-// drawLine(ctx, [x1, y1], [x2, y2], 'green', 2)
-const drawLine = (ctx, begin, end, stroke = 'black', width = 1) => {
-  if (stroke) {
-    ctx.strokeStyle = stroke;
-  }
+      if (width) {
+        ctx.lineWidth = width;
+      }
 
-  if (width) {
-    ctx.lineWidth = width;
-  }
+      ctx.beginPath();
+      ctx.moveTo(...begin);
+      ctx.lineTo(...end);
+      ctx.stroke();
+    }
 
-  ctx.beginPath();
-  ctx.moveTo(...begin);
-  ctx.lineTo(...end);
-  ctx.stroke();
-}
+    window.addEventListener("mousedown", onmousedown); // call `onmousedown` when the mouse is clicked
+    window.addEventListener("keydown", onkeydown);  // call `onkeydown` when a key is pressed
 
-window.addEventListener("mousedown", onmousedown); // call `onmousedown` when the mouse is clicked
-window.addEventListener("keydown", onkeydown);  // call `onkeydown` when a key is pressed
-
-setInterval(draw, 100);  // call `drawCanvas` every 100 ms
+    setInterval(draw, 100);  // call `drawCanvas` every 100 ms
 
 
   </script>

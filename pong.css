@@ -7,11 +7,11 @@ body {
 }
 
 #canvas {
-    max-width: 500px;
-    max-height: 500px;
-    height: 500px;
-    width: 500px;
-    background: linear-gradient(46deg,rgb(30, 83, 104) 0%, rgba(30, 54, 74, 1) 100%);
-    border-radius: 10px;
-    border:rgb(17, 31, 43) solid 3px;
+  max-width: 500px;
+  max-height: 500px;
+  height: 500px;
+  width: 500px;
+  background: linear-gradient(46deg,rgb(30, 83, 104) 0%, rgba(30, 54, 74, 1) 100%);
+  border-radius: 10px;
+  border:rgb(17, 31, 43) solid 3px;
 }
