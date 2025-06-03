@@ -3,13 +3,14 @@ const playerOne = {
     points: 0,
     speed: 3,
 
-    type: "human",
     length: 50,
     width: 10,
     color: 'lightblue',
-
+    
+    type: "human",
     upkey: 'ArrowUp',
-    downkey: 'ArrowDown'
+    downkey: 'ArrowDown',
+    side: 'right'
 };
 
 const playerTwo = {
@@ -17,13 +18,14 @@ const playerTwo = {
     points: 0,
     speed: 3,
 
-    type: "human",
-    length: 15,
+    length: 40,
     width: 10,
     color: 'lightblue',
-
+    
+    type: "human",
     upkey: 'KeyW',
-    downkey: 'KeyS'
+    downkey: 'KeyS',
+    side: 'left'
 };
 
 const ball = {
@@ -32,29 +34,35 @@ const ball = {
         y: 50
     },
     dir: {
-        x: -1,
-        y: -1
+        x: 0,
+        y: 0
     },
 
     radius: 5,
     color: 'red',
-    speed: 0.6
+    speed: 1
 }
 
 const field = {
     margin: 5
 }
 
-
 let ctx;
-let canvas;
+let infoLabel;
+let started;
+let paused;
+let p1Score;
+let p2Score;
 
 
 const onKeyDown = (event) => {
-    // console.log("Button pressed!");
+
+    if(paused) {
+        started = true;
+    }
+
     if(event.code === playerOne.upkey && fieldCheck(playerOne, 'up')) {
         playerOne.pos -= playerOne.speed;
-        // console.log(`Pressed ${event.code}`);
     }
     
     if(event.code === playerOne.downkey && fieldCheck(playerOne, 'down')) {
@@ -63,7 +71,6 @@ const onKeyDown = (event) => {
 
     if(event.code === playerTwo.upkey && fieldCheck(playerTwo, 'up')) {
         playerTwo.pos -= playerTwo.speed;
-        // console.log(`Pressed ${event.code}`);
     }
     
     if(event.code === playerTwo.downkey && fieldCheck(playerTwo, 'down')) {
@@ -74,14 +81,24 @@ const onKeyDown = (event) => {
 
 const update = () => {
 
-    if(ball.pos.x + ball.radius >= ctx.canvas.width) {
-        ball.dir.x = -1;
-    }
-
-    if(ball.pos.x - ball.radius <= 0) {
+    if(started) {
+        infoLabel.innerText = '';
         ball.dir.x = 1;
+        ball.dir.y = 1;
+        started = false;
+        paused = false;
+    }
+    
+    if(ball.pos.x - ball.radius <= 0) {
+        playerOne.points++;
+        startScreen();
     }
 
+    if(ball.pos.x + ball.radius >= ctx.canvas.width) {
+        playerTwo.points++;
+        startScreen()
+    }
+    
     if(ball.pos.y + ball.radius >= ctx.canvas.height) {
         ball.dir.y = -1;
     }
@@ -93,16 +110,16 @@ const update = () => {
     ball.pos.x += ball.dir.x * ball.speed;
     ball.pos.y += ball.dir.y * ball.speed;
 
-    if(ball.pos.x + ball.radius + 1  <= 0 + field.margin + playerOne.width) { // Ball touches player one
-        console.log("precollision detected");
-        if(ball.pos.y + ball.radius >= playerOne.pos && ball.pos.y + ball.radius <= playerOne.pos + playerOne.length) {
-            ball.dir.x = 1;
-            console.log("player collided");
-        }
-
+    if(playerCollide(playerOne, ball)) {
+        ball.dir.x = 1;
+    }
+    if(playerCollide(playerTwo, ball)) {
+        ball.dir.x = -1;
     }
 
+    infoLabel.innerText = `Ball: dirx:${ball.dir.x}, diry:${ball.dir.y}\nSpeed:${ball.speed}`;
     draw();
+    window.requestAnimationFrame(update);
 }
 
 const fieldCheck = (player, mode) => {
@@ -118,6 +135,41 @@ const fieldCheck = (player, mode) => {
     return true;
 }
 
+const playerCollide = (player, collide) =>{
+
+    if(player.side === 'right') {
+        if(collide.pos.x - collide.radius <= 0 + field.margin + player.width) { // Ball touches player one
+            if(collide.pos.y + collide.radius >= player.pos && collide.pos.y + collide.radius <= player.pos + player.length) {
+                return true;
+            }
+        }
+    }
+
+    if(player.side === 'left') {
+        if(collide.pos.x + collide.radius >= ctx.canvas.width - field.margin - player.width) { // Ball touches player one
+            if(collide.pos.y + collide.radius >= player.pos && collide.pos.y + collide.radius <= player.pos + player.length) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+const startScreen = () => {
+
+    paused = true;
+
+    ball.pos.x = ctx.canvas.width / 2;
+    ball.pos.y = ctx.canvas.height / 2;
+    ball.dir.x = 0;
+    ball.dir.y = 0;
+
+    infoLabel.innerText = 'To start game, press any key!';
+
+    requestAnimationFrame(update);
+}
+
 const draw = () => {
     // clear
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -130,20 +182,26 @@ const draw = () => {
     ctx.fillStyle = playerTwo.color;
     ctx.fillRect(ctx.canvas.width - field.margin - playerTwo.width, playerTwo.pos , playerTwo.width, playerTwo.length);
 
+
     // ball
     ctx.beginPath();
     ctx.fillStyle = ball.color;
     ctx.arc(ball.pos.x, ball.pos.y, ball.radius, 0, 2 * Math.PI);
     ctx.fill();
 
-    window.requestAnimationFrame(update);
+    // scores
+    p1Score.innerText = playerOne.points;
+    p2Score.innerText = playerTwo.points;
 }
 
 
 const init = () => {
-    canvas = document.getElementById("canvas");
-    ctx = canvas.getContext("2d", {alpha: true});
-    window.requestAnimationFrame(update);
+    ctx = document.getElementById("canvas").getContext("2d", {alpha: true});
+    p1Score = document.getElementById('p1Score');
+    p2Score = document.getElementById('p2Score');
+    infoLabel = document.getElementById('info');
+
+    window.requestAnimationFrame(startScreen);
 }
 
 window.addEventListener("load", init);

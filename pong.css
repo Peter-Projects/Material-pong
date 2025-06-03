@@ -15,3 +15,40 @@ body {
   border-radius: 10px;
   border:rgb(17, 31, 43) solid 3px;
 }
+
+#game {
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+/* border: solid black 1px; */
+}
+
+#info {
+  margin-top: -5px;
+  font-size: small;
+}
+
+#canvas-scores {
+  display: inline-block;
+  /* border: solid black 1px; */
+}
+
+#scores {
+  margin-top: -20px;
+  font-weight: bold;
+}
+
+#p1Score {
+  text-align: left;
+  ;
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: auto;
+}
+
+#p2Score {
+  text-align: right;
+  display: inline-block;
+  margin-right: 5px;
+  margin-left: auto;
+}
