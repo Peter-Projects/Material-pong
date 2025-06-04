@@ -10,7 +10,8 @@ const playerOne = {
     type: "human",
     upkey: 'ArrowUp',
     downkey: 'ArrowDown',
-    side: 'right'
+    side: 'right',
+    botRandomPos: 50
 };
 
 const playerTwo = {
@@ -25,7 +26,8 @@ const playerTwo = {
     type: "human",
     upkey: 'KeyW',
     downkey: 'KeyS',
-    side: 'left'
+    side: 'left',
+    botRandomPos: 50
 };
 
 const ball = {
@@ -83,8 +85,8 @@ const update = () => {
 
     if(started) {
         infoLabel.innerText = '';
-        ball.dir.x = 1;
-        ball.dir.y = 1;
+        ball.dir.x = randomDirection();
+        ball.dir.y = randomDirection();
         started = false;
         paused = false;
     }
@@ -92,11 +94,13 @@ const update = () => {
     if(ball.pos.x - ball.radius <= 0) {
         playerOne.points++;
         startScreen();
+        return;
     }
 
     if(ball.pos.x + ball.radius >= ctx.canvas.width) {
         playerTwo.points++;
         startScreen()
+        return;
     }
     
     if(ball.pos.y + ball.radius >= ctx.canvas.height) {
@@ -167,7 +171,7 @@ const startScreen = () => {
 
     infoLabel.innerText = 'To start game, press any key!';
 
-    requestAnimationFrame(update);
+    return;
 }
 
 const draw = () => {
@@ -200,9 +204,36 @@ const init = () => {
     p1Score = document.getElementById('p1Score');
     p2Score = document.getElementById('p2Score');
     infoLabel = document.getElementById('info');
-
-    window.requestAnimationFrame(startScreen);
+    startStcreen();
+    window.requestAnimationFrame(update);
 }
 
+const randomDirection = () => {
+    return Math.random() >= 0.5 ? 1 : -1;
+}
+
+const calcBotPosition = (player) => {
+
+    if(!(player.pos <= player.botRandomPos + 2)) {
+        player.pos += player.speed;
+    }
+
+    else if (!(player.pos >= player.botRandomPos - 2)) {
+        player.pos += player.speed;
+    }
+
+    else if (Math.random() >= 0.9) {
+      player.botRandomPos = Math.random() * ctx.canvas.width;
+    }
+
+    else {
+        if(player.pos + (player.length / 2) >= ball.pos) {
+            player.pos -= player.speed;
+        }
+        else if (player.pos + (player.lengh / 2) <= ball.pos) {
+            player.pos += player.speed;
+        }
+    }
+}
 window.addEventListener("load", init);
 window.addEventListener("keydown", onKeyDown);
