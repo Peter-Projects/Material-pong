@@ -3,15 +3,17 @@ const playerOne = {
     points: 0,
     speed: 3,
 
-    length: 50,
+    length: 40,
     width: 10,
     color: 'lightblue',
     
-    type: "human",
+    type: "human", // human or bot
     upkey: 'ArrowUp',
     downkey: 'ArrowDown',
     side: 'right',
-    botRandomPos: 50
+    botRandomPos: 50,
+    gotoRandomPos:  false,
+    botSkill: 0.9
 };
 
 const playerTwo = {
@@ -27,7 +29,9 @@ const playerTwo = {
     upkey: 'KeyW',
     downkey: 'KeyS',
     side: 'left',
-    botRandomPos: 50
+    botRandomPos: 50,
+    gotoRandomPos:  false,
+    botSkill: 0.8
 };
 
 const ball = {
@@ -63,20 +67,24 @@ const onKeyDown = (event) => {
         started = true;
     }
 
-    if(event.code === playerOne.upkey && fieldCheck(playerOne, 'up')) {
-        playerOne.pos -= playerOne.speed;
-    }
-    
-    if(event.code === playerOne.downkey && fieldCheck(playerOne, 'down')) {
-        playerOne.pos += playerOne.speed;
+    if (playerOne.type === 'human') {
+        if(event.code === playerOne.upkey && fieldCheck(playerOne, 'up')) {
+            playerOne.pos -= playerOne.speed;
+        }
+        
+        if(event.code === playerOne.downkey && fieldCheck(playerOne, 'down')) {
+            playerOne.pos += playerOne.speed;
+        }
     }
 
-    if(event.code === playerTwo.upkey && fieldCheck(playerTwo, 'up')) {
-        playerTwo.pos -= playerTwo.speed;
-    }
-    
-    if(event.code === playerTwo.downkey && fieldCheck(playerTwo, 'down')) {
-        playerTwo.pos += playerTwo.speed;
+    if(playerTwo.type == 'human') {
+        if(event.code === playerTwo.upkey && fieldCheck(playerTwo, 'up')) {
+            playerTwo.pos -= playerTwo.speed;
+        }
+
+        if(event.code === playerTwo.downkey && fieldCheck(playerTwo, 'down')) {
+            playerTwo.pos += playerTwo.speed;
+        }
     }
 }
 
@@ -91,16 +99,25 @@ const update = () => {
         paused = false;
     }
     
+    if(playerOne.type === 'bot') {
+        calcBotPosition(playerOne);
+    }
+
+    if(playerTwo.type === 'bot') {
+        calcBotPosition(playerTwo);
+    }
+
+    fieldCheck(playerOne, 'all');
+    fieldCheck(playerTwo, 'all');
+
     if(ball.pos.x - ball.radius <= 0) {
-        playerOne.points++;
+        playerTwo.points++;
         startScreen();
-        return;
     }
 
     if(ball.pos.x + ball.radius >= ctx.canvas.width) {
-        playerTwo.points++;
-        startScreen()
-        return;
+        playerOne.points++;
+        startScreen();
     }
     
     if(ball.pos.y + ball.radius >= ctx.canvas.height) {
@@ -121,18 +138,21 @@ const update = () => {
         ball.dir.x = -1;
     }
 
-    infoLabel.innerText = `Ball: dirx:${ball.dir.x}, diry:${ball.dir.y}\nSpeed:${ball.speed}`;
+    //infoLabel.innerText = `Ball: dirx:${ball.dir.x}, diry:${ball.dir.y}\nSpeed:${ball.speed}`;
+    infoLabel.innerText = `Ball y:${ball.pos.y},\n Player pos:${Math.round(playerOne.pos)}, randpos:${Math.round(playerOne.botRandomPos)}`;
     draw();
     window.requestAnimationFrame(update);
 }
 
 const fieldCheck = (player, mode) => {
     
-    if(player.pos <= 0 + field.margin && mode === 'up') {
+    if(player.pos <= 0 + field.margin && (mode === 'up' || mode === 'all')) {
+        player.pos = 0 + field.margin;
         return false;
     }
 
-    if(player.pos + player.length >= ctx.canvas.height - field.margin && mode === 'down') {
+    if(player.pos + player.length >= ctx.canvas.height - field.margin && (mode === 'down' || mode === 'all')) {
+        player.pos = ctx.canvas.height - field.margin - player.length;
         return false;
     }
     //console.log(`Player pos: ${player.pos},\n height ${player.length},\n mode ${mode},\n canvas height ${ctx.canvas.height}`);
@@ -170,11 +190,11 @@ const startScreen = () => {
     ball.dir.y = 0;
 
     infoLabel.innerText = 'To start game, press any key!';
-
-    return;
 }
 
 const draw = () => {
+
+    //-------CANVAS-------//
     // clear
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
@@ -193,6 +213,13 @@ const draw = () => {
     ctx.arc(ball.pos.x, ball.pos.y, ball.radius, 0, 2 * Math.PI);
     ctx.fill();
 
+    //-------BUTTONS------//
+    // gamemode
+    document.getElementById('p1mode').innerText = playerOne.type;
+    document.getElementById('p2mode').innerText = playerTwo.type;
+
+
+    //-------TEXT---------//
     // scores
     p1Score.innerText = playerOne.points;
     p2Score.innerText = playerTwo.points;
@@ -204,7 +231,7 @@ const init = () => {
     p1Score = document.getElementById('p1Score');
     p2Score = document.getElementById('p2Score');
     infoLabel = document.getElementById('info');
-    startStcreen();
+    startScreen();
     window.requestAnimationFrame(update);
 }
 
@@ -214,25 +241,40 @@ const randomDirection = () => {
 
 const calcBotPosition = (player) => {
 
-    if(!(player.pos <= player.botRandomPos + 2)) {
-        player.pos += player.speed;
+    if (!player.gotoRandomPos && Math.random() >= player.botSkill) {
+      player.botRandomPos = (Math.random() * (ctx.canvas.height - (field.margin * 2) - player.length) + field.margin);
+      player.gotoRandomPos = true;
     }
-
-    else if (!(player.pos >= player.botRandomPos - 2)) {
-        player.pos += player.speed;
-    }
-
-    else if (Math.random() >= 0.9) {
-      player.botRandomPos = Math.random() * ctx.canvas.width;
-    }
-
-    else {
-        if(player.pos + (player.length / 2) >= ball.pos) {
-            player.pos -= player.speed;
+    if(player.gotoRandomPos) {
+        if(player.pos <= player.botRandomPos + 2 && player.pos >= player.botRandomPos - 2) { // player is inside random position
+            player.gotoRandomPos = false;
         }
-        else if (player.pos + (player.lengh / 2) <= ball.pos) {
+
+        if(player.pos < player.botRandomPos) {
             player.pos += player.speed;
         }
+        
+        else if (player.pos > player.botRandomPos) {
+            player.pos -= player.speed;
+        }
+    }
+    else {
+        console.log('player following');
+        if(player.pos + (player.length / 2) - 2 > ball.pos.y) {
+            player.pos -= player.speed;
+        }
+        else if (player.pos + (player.length / 2) + 2 < ball.pos.y) {
+            player.pos += player.speed;
+        }
+    }
+}
+
+const changePlayerMode = (player) => {
+    if(player.type === 'human') {
+        player.type = 'bot';
+    }
+    else if(player.type === 'bot') {
+        player.type = 'human';
     }
 }
 window.addEventListener("load", init);

@@ -8,7 +8,11 @@
     <body>
         <div id="game">
             <h1>You are playing pong on <span id="device">Mobile</span></h1>
-            <div id="canvas-scores">
+            <div id="canvas-div">
+                <div id="playerMode">
+                    <button class="playerModeButton" id="p1mode" onclick="changePlayerMode(playerOne)">Select Gamemode</button>
+                    <button class="playerModeButton" id="p2mode" onclick="changePlayerMode(playerTwo)">Select Gamemode</button>
+                </div>
                 <canvas id="canvas"></canvas>
                 <div id="scores">
                     <p id="p1Score">#</p>

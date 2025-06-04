@@ -28,7 +28,7 @@ margin-right: auto;
   font-size: small;
 }
 
-#canvas-scores {
+#canvas-div {
   display: inline-block;
   /* border: solid black 1px; */
 }
@@ -51,4 +51,22 @@ margin-right: auto;
   display: inline-block;
   margin-right: 5px;
   margin-left: auto;
+}
+
+.playerModeButton {
+  width: 55px;
+  text-transform: uppercase;
+  padding: 2px;
+  background: linear-gradient(46deg,rgb(30, 83, 104) 0%, rgba(30, 54, 74, 1) 100%);
+  color: whitesmoke;
+  border-radius: 5px;
+  border:rgb(17, 31, 43) solid 2px;
+}
+
+#playerMode {
+  padding-bottom: 4px
+}
+
+#p1mode {
+  margin-right: 62%;
 }
