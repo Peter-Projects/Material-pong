@@ -6,20 +6,31 @@
         <script src="pong.js"></script>
     </head>
     <body>
-        <div id="game">
-            <h1>You are playing pong on <span id="device">Mobile</span></h1>
-            <div id="canvas-div">
-                <div id="playerMode">
-                    <button class="playerModeButton" id="p1mode" onclick="changePlayerMode(playerOne)">Select Gamemode</button>
-                    <button class="playerModeButton" id="p2mode" onclick="changePlayerMode(playerTwo)">Select Gamemode</button>
-                </div>
-                <canvas id="canvas"></canvas>
-                <div id="scores">
-                    <p id="p1Score">#</p>
-                    <p id="p2Score">#</p>
-                </div>
+        <div id="mainContent">
+            <div id="topBar">
+                <button class="outsideButton" id="debugButton" onclick="showDebug()">Show debug</button>
             </div>
-            <p id="info">Display Info here</p>
+            <div id="game">
+                <h1>You are playing pong on <span id="device">Mobile</span></h1>
+                <div id="canvas-div">
+                    <div id="playerMode">
+                        <button class="playerModeButton" id="p1mode" onclick="changePlayerMode(playerOne)">Select Gamemode</button>
+                        <button class="playerModeButton" id="p2mode" onclick="changePlayerMode(playerTwo)">Select Gamemode</button>
+                    </div>
+                    <canvas id="canvas"></canvas>
+                    <div id="scores">
+                        <p id="p1Score">#</p>
+                        <p id="p2Score">#</p>
+                    </div>
+                </div>
+                <p id="info">Display Info here</p>
+            </div>
+            <div class="sidebar" id="debugBar">
+                <p class="debugInfo" id="generalInfo">General Info here</p>
+                <p class="debugInfo" id="ballInfo">Info about the Ball here</p>
+                <p class="debugInfo" id="p1Info">Info about player one here</p>
+                <p class="debugInfo" id="p2Info">Info about player two here</p>
+            </div>
         </div>
     </body>
 </html>

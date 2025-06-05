@@ -4,7 +4,7 @@ const playerOne = {
     speed: 3,
 
     length: 40,
-    width: 10,
+    width: 2,
     color: 'lightblue',
     
     type: "human", // human or bot
@@ -22,7 +22,7 @@ const playerTwo = {
     speed: 3,
 
     length: 40,
-    width: 10,
+    width: 2,
     color: 'lightblue',
     
     type: "human",
@@ -59,6 +59,7 @@ let started;
 let paused;
 let p1Score;
 let p2Score;
+let debugShown = false;
 
 
 const onKeyDown = (event) => {
@@ -223,6 +224,8 @@ const draw = () => {
     // scores
     p1Score.innerText = playerOne.points;
     p2Score.innerText = playerTwo.points;
+
+    // debu
 }
 
 
@@ -251,20 +254,20 @@ const calcBotPosition = (player) => {
         }
 
         if(player.pos < player.botRandomPos) {
-            player.pos += player.speed;
+            player.pos += player.speed / 6;
         }
         
         else if (player.pos > player.botRandomPos) {
-            player.pos -= player.speed;
+            player.pos -= player.speed / 6;
         }
     }
     else {
         console.log('player following');
         if(player.pos + (player.length / 2) - 2 > ball.pos.y) {
-            player.pos -= player.speed;
+            player.pos -= player.speed / 5;
         }
         else if (player.pos + (player.length / 2) + 2 < ball.pos.y) {
-            player.pos += player.speed;
+            player.pos += player.speed / 5;
         }
     }
 }
@@ -277,5 +280,17 @@ const changePlayerMode = (player) => {
         player.type = 'human';
     }
 }
+
+const showDebug = () => {
+    debugShown = !debugShown;
+    if(debugShown) {
+        document.getElementById('debugBar').style.display = 'block';
+        document.getElementById('mainContent').style.marginLeft = '220px';
+        return;
+    }
+    document.getElementById('debugBar').style.display = 'none';
+    document.getElementById('mainContent').style.marginLeft = '3px';
+}
+
 window.addEventListener("load", init);
 window.addEventListener("keydown", onKeyDown);
