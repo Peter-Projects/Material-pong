@@ -3,8 +3,8 @@ const playerOne = {
     points: 0,
     speed: 3,
 
-    length: 40,
-    width: 2,
+    length: 75,
+    width: 3,
     color: 'lightblue',
     
     type: "human", // human or bot
@@ -21,8 +21,8 @@ const playerTwo = {
     points: 0,
     speed: 3,
 
-    length: 40,
-    width: 2,
+    length: 75,
+    width: 3,
     color: 'lightblue',
     
     type: "human",
@@ -44,9 +44,9 @@ const ball = {
         y: 0
     },
 
-    radius: 5,
+    radius: 10,
     color: 'red',
-    speed: 1
+    speed: 2
 }
 
 const field = {
@@ -60,6 +60,7 @@ let paused;
 let p1Score;
 let p2Score;
 let debugShown = false;
+let settingsShown = false;
 
 
 const onKeyDown = (event) => {
@@ -139,8 +140,6 @@ const update = () => {
         ball.dir.x = -1;
     }
 
-    //infoLabel.innerText = `Ball: dirx:${ball.dir.x}, diry:${ball.dir.y}\nSpeed:${ball.speed}`;
-    infoLabel.innerText = `Ball y:${ball.pos.y},\n Player pos:${Math.round(playerOne.pos)}, randpos:${Math.round(playerOne.botRandomPos)}`;
     draw();
     window.requestAnimationFrame(update);
 }
@@ -156,7 +155,6 @@ const fieldCheck = (player, mode) => {
         player.pos = ctx.canvas.height - field.margin - player.length;
         return false;
     }
-    //console.log(`Player pos: ${player.pos},\n height ${player.length},\n mode ${mode},\n canvas height ${ctx.canvas.height}`);
     return true;
 }
 
@@ -216,8 +214,8 @@ const draw = () => {
 
     //-------BUTTONS------//
     // gamemode
-    document.getElementById('p1mode').innerText = playerOne.type;
-    document.getElementById('p2mode').innerText = playerTwo.type;
+    document.getElementById('player-1-mode').innerText = playerOne.type;
+    document.getElementById('player-2-mode').innerText = playerTwo.type;
 
 
     //-------TEXT---------//
@@ -225,15 +223,29 @@ const draw = () => {
     p1Score.innerText = playerOne.points;
     p2Score.innerText = playerTwo.points;
 
-    // debu
+    // keybindings
+    document.getElementById('player-1-upkey-label').innerText = playerOne.upkey;
+    document.getElementById('player-1-downkey-label').innerText = playerOne.downkey;
+    document.getElementById('player-2-upkey-label').innerText = playerTwo.upkey;
+    document.getElementById('player-2-downkey-label').innerText = playerTwo.downkey;
+    // debug info
+    if(debugShown) {
+        document.getElementById('general-info').innerText = `Field margin: ${field.margin}`;
+        document.getElementById('ball-info').innerText = `Speed: ${ball.speed}\nPos: x:${ball.pos.x} y:${ball.pos.y}\nDirection: x${ball.dir.x} y:${ball.dir.y}\nRadius: ${ball.radius}`;
+        document.getElementById('player-1-info').innerText = `Positio: ${Math.round(playerOne.pos)}\nPoints: ${playerOne.points}\nSpeed: ${playerOne.speed}\nLenght: ${playerOne.length}\nWidth: ${playerOne.width}\nType: ${playerOne.type}\nUp-Key: '${playerOne.upkey}'\nDown-Key: '${playerOne.downkey}'\nBot:\nRandom Position: ${Math.round(playerOne.botRandomPos)}\nGoto random Position: ${playerOne.gotoRandomPos}\nSkill: ${playerOne.botSkill}`;
+        document.getElementById('player-2-info').innerText = `Positio: ${Math.round(playerTwo.pos)}\nPoints: ${playerTwo.points}\nSpeed: ${playerTwo.speed}\nLenght: ${playerTwo.length}\nWidth: ${playerTwo.width}\nType: ${playerTwo.type}\nUp-Key: '${playerTwo.upkey}'\nDown-Key: '${playerTwo.downkey}'\nBot:\nRandom Position: ${Math.round(playerTwo.botRandomPos)}\nGoto random Position: ${playerTwo.gotoRandomPos}\nSkill: ${playerTwo.botSkill}`;
+    }
 }
 
 
 const init = () => {
-    ctx = document.getElementById("canvas").getContext("2d", {alpha: true});
-    p1Score = document.getElementById('p1Score');
-    p2Score = document.getElementById('p2Score');
-    infoLabel = document.getElementById('info');
+    ctx = document.getElementById("playingfield").getContext("2d", {alpha: true});
+    p1Score = document.getElementById('player-1-score-label');
+    p2Score = document.getElementById('player-2-score-label');
+    infoLabel = document.getElementById('info-label');
+    ball.color = getComputedStyle(document.getElementById('top-bar-title-text')).getPropertyValue('--md-sys-color-on-primary-fixed');
+    playerOne.color = getComputedStyle(document.getElementById('top-bar-title-text')).getPropertyValue('--md-sys-color-on-primary');
+    playerTwo.color = getComputedStyle(document.getElementById('top-bar-title-text')).getPropertyValue('--md-sys-color-on-primary');
     startScreen();
     window.requestAnimationFrame(update);
 }
@@ -262,7 +274,6 @@ const calcBotPosition = (player) => {
         }
     }
     else {
-        console.log('player following');
         if(player.pos + (player.length / 2) - 2 > ball.pos.y) {
             player.pos -= player.speed / 5;
         }
@@ -284,13 +295,19 @@ const changePlayerMode = (player) => {
 const showDebug = () => {
     debugShown = !debugShown;
     if(debugShown) {
-        document.getElementById('debugBar').style.display = 'block';
-        document.getElementById('mainContent').style.marginLeft = '220px';
+        document.getElementById('debug-drawer').style.display = 'block';
         return;
     }
-    document.getElementById('debugBar').style.display = 'none';
-    document.getElementById('mainContent').style.marginLeft = '3px';
+    document.getElementById('debug-drawer').style.display = 'none';
 }
 
+const showSettings = () => {
+    settingsShown = !settingsShown;
+    if(settingsShown) {
+        document.getElementById('settings-drawer').style.display = 'block';
+        return;
+    }
+    document.getElementById('settings-drawer').style.display = 'none';
+}
 window.addEventListener("load", init);
 window.addEventListener("keydown", onKeyDown);

@@ -1,86 +1,180 @@
-body {
-  font-family: "Roboto", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
+
+/* Top Bar (always visible)*/
+
+#top-bar-background {
+  background: var(--md-sys-color-surface-container-highest);
+  padding: 5px;
 }
 
-#canvas {
-  /*max-width: 500px;
-  /*max-height: 500px;
-  /*height: 500px;
-  /*width: 500px;*/
-  background: linear-gradient(46deg,rgb(30, 83, 104) 0%, rgba(30, 54, 74, 1) 100%);
-  border-radius: 10px;
-  border:rgb(17, 31, 43) solid 3px;
+#top-bar-content {
+  max-width: 1080px;
+  margin-left:auto;
+  margin-right:auto;
+  padding: 10px;
+}
+
+#top-bar-buttons {
+  text-align: left;
+  flex-grow: 1;
+  height: fit-content;
+}
+
+#top-bar-title {
+  height: fit-content;
+  text-align: right;
+  flex-grow: 1;
+}
+
+#top-bar-title h1{
+  margin: 0px;
+  color: var(--md-sys-color-on-surface-variant)
+}
+
+.flex-box {
+  display: flex;
+}
+
+body {
+  margin: 0px;
+}
+
+/* //////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+#content {
+  flex-direction: column;
+  align-items: stretch;
+  background-color: var(--md-sys-color-background);
+  /* border: black 1px solid; */
+}
+
+#main-content {
+  justify-content: flex-start;
+  flex-grow: 2;
+  padding: 5px;
+
+  /* border: black 1px solid; */
+}
+
+
+#game-and-settings {
+  flex-grow: 1;
+  /* border: black 1px solid; */
 }
 
 #game {
-text-align: center;
-margin-left: auto;
-margin-right: auto;
-/* border: solid black 1px; */
-}
-
-#info {
-  margin-top: -5px;
-  font-size: small;
-}
-
-#canvas-div {
-  display: inline-block;
-  /* border: solid black 1px; */
-}
-
-#scores {
-  margin-top: -20px;
-  font-weight: bold;
-}
-
-#p1Score {
-  text-align: left;
-  ;
-  display: inline-block;
-  margin-left: 5px;
+  flex-direction: column;
+  width: fit-content;
+  margin-top: 6%;
   margin-right: auto;
+  margin-left: auto;
+  padding: 10px;
+  /* border: black 1px solid; */
+  
+  background-color: var(--md-sys-color-secondary-container);
+  padding: 25px;
+  border-radius: 25px;
 }
 
-#p2Score {
-  text-align: right;
-  display: inline-block;
-  margin-right: 5px;
+#playingfield-scores {
+  flex-grow: 1;
+  /* border: black 1px solid; */
+  /* background-color: aliceblue; */
+  
+}
+
+.player-side {
+  flex-grow: 2;
+  flex-direction: column;
+  justify-content: space-between;
+  /* border: black 1px solid; */
+}
+
+.player-info-bit {
+  margin: 10px;
+  /*flex-grow: 1;*/
+  /* border: black 1px solid; */
+} 
+
+.player-1-side {
   margin-left: auto;
 }
 
-.playerModeButton {
-  width: 55px;
-  text-transform: uppercase;
-  padding: 2px;
-  background: linear-gradient(46deg,rgb(30, 83, 104) 0%, rgba(30, 54, 74, 1) 100%);
-  color: whitesmoke;
-  border-radius: 5px;
-  border:rgb(17, 31, 43) solid 2px;
+.player-2-side {
+  margin-right: auto;
 }
 
-#playerMode {
-  padding-bottom: 4px
+.key {
+  display: flex;
+  /* border: var(--md-sys-color-outline) solid 1px; */
+  margin: 0px;
+  flex-grow: 3;
+  align-items: center;
 }
 
-#p1mode {
-  margin-right: 62%;
+.score {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  flex-grow: 2;
 }
 
-.sidebar {
-  height: 100%;
-  width: 200px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #9d93ca;
-  overflow-x: hidden;
+.key-label {
+  width: 70px;
+  border: var(--md-sys-color-outline) solid 1px;
+  color: var(--md-sys-color-outline);
+  padding: 10px;
   padding-top: 20px;
-  padding-right: 20px;
+  padding-bottom: 20px;
+  border-radius: 20px;
+}
+
+.key-label.player-1-side {
+  text-align: right;
+}
+
+.key-label.player-2-side {
+  text-align: left;
+}
+#playingfield {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 0px;
+  margin-bottom: opx;
+}
+#info {
+  text-align: center;
+  /* border: black 1px solid; */
+}
+
+#settings-drawer {
   display: none;
+  /* border: black 1px solid; */
+  
+}
+
+#debug-drawer {
+  min-width: fit-content;
+  display: none;
+
+  padding: 25px;
+  background-color: var(--md-sys-color-tertiary);
+  color: var(--md-sys-color-on-tertiary);
+  border-radius: 25px;
+  /* border: black 1px solid; */
+}
+
+
+#debug-drawer h4 {
+  margin: 0px;
+  margin-top: 15px;
+}
+
+#debug-drawer p, h3 {
+  margin: 0px;
+}
+
+#playingfield {
+  background: var(--md-sys-color-surface-tint);
+  border-radius: 20px;
+
 }

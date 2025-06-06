@@ -2,34 +2,92 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="pong.css">
         <script src="pong.js"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <!-- I know that this isn't the right way to do Material UI web, but it is easy -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "@material/web/": "https://esm.run/@material/web/"
+                }
+            }
+        </script>
+        <script type="module">
+            import '@material/web/all.js';
+            import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+            document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+            </script>
+        <link rel="stylesheet" href="pong.css">
+        <link rel="stylesheet" href="md3-colors.css">
     </head>
     <body>
-        <div id="mainContent">
-            <div id="topBar">
-                <button class="outsideButton" id="debugButton" onclick="showDebug()">Show debug</button>
-            </div>
-            <div id="game">
-                <h1>You are playing pong on <span id="device">Mobile</span></h1>
-                <div id="canvas-div">
-                    <div id="playerMode">
-                        <button class="playerModeButton" id="p1mode" onclick="changePlayerMode(playerOne)">Select Gamemode</button>
-                        <button class="playerModeButton" id="p2mode" onclick="changePlayerMode(playerTwo)">Select Gamemode</button>
+        <div id="content" class="flex-box">
+            <div id="top-bar-background">
+                <div class="flex-box" id="top-bar-content">
+                    <div id="top-bar-buttons">
+                        <md-outlined-button class="top-bar-items" id="debug-button" onclick="showDebug()">Debug Info</md-outlined-button>
+                        <md-outlined-button class="top-bar-items" id="settings-button" onclick="showSettings()">Settings</md-outlined-button>
                     </div>
-                    <canvas id="canvas"></canvas>
-                    <div id="scores">
-                        <p id="p1Score">#</p>
-                        <p id="p2Score">#</p>
+                    <div id="top-bar-title">
+                        <h1 class="top-bar-items md-typescale-headline-large" id="top-bar-title-text">Pong</h1>
                     </div>
                 </div>
-                <p id="info">Display Info here</p>
             </div>
-            <div class="sidebar" id="debugBar">
-                <p class="debugInfo" id="generalInfo">General Info here</p>
-                <p class="debugInfo" id="ballInfo">Info about the Ball here</p>
-                <p class="debugInfo" id="p1Info">Info about player one here</p>
-                <p class="debugInfo" id="p2Info">Info about player two here</p>
+            <div id="main-content" class="flex-box">
+                <div class="side-drawer" id="debug-drawer">
+                    <h3 class="md-typescale-title-large">Debuging Information</h3>
+                    <h4 class="md-typescale-title-medium">General</h4>
+                    <p class="debug-info md-typescale-body-medium" id="general-info">General Info here</p>
+                    <h4 class="md-typescale-title-medium">Ball</h4>
+                    <p class="debug-info md-typescale-body-medium" id="ball-info">Info about the Ball here</p>
+                    <h4 class="md-typescale-title-medium">Player 1</h4>
+                    <p class="debug-info md-typescale-body-medium" id="player-1-info">Info about player one here</p>
+                    <h4 class="md-typescale-title-medium">Player 2</h4>
+                    <p class="debug-info md-typescale-body-medium" id="player-2-info">Info about player two here</p>
+                </div>
+                <div id="game-and-settings">
+                    <div id="game" class="flex-box">
+                        <div id="playingfield-scores" class="flex-box">
+                            <div class="player-side flex-box">
+                                <div id="player-1-upkey" class="key">
+                                    <p id="player-1-upkey-label" class="player-info-bit player-1-side key-label md-typescale-body-small">##</p>
+                                </div>
+                                <div id="player-1-score" class="score">
+                                    <p id="player-1-score-label" class="player-info-bit md-typescale-display-large player-1-side">#</p>
+                                </div>
+                                <div id="player-1-downkey" class="key">
+                                    <p id="player-1-downkey-label" class="player-info-bit player-1-side key-label md-typescale-body-small">##</p>
+                                </div>
+                            </div>
+                            <div id="canvas">
+                                <canvas id="playingfield" height="300" width="520">Sorry, your Browser doesn't support the HTML5 canvas</canvas>
+                            </div>
+                            <div class="player-side flex-box">
+                                <div id="player-2-upkey" class="key">
+                                    <p id="player-2-upkey-label" class="player-info-bit player-2-side key-label md-typescale-body-small">##</p>
+                                </div>
+                                <div id="player-2-score" class="score">
+                                    <p id="player-2-score-label" class="player-info-bit md-typescale-display-large player-2-side">#</p>
+                                </div>
+                                <div id="player-2-downkey" class="key">
+                                    <p id="player-2-downkey-label" class="player-info-bit player-2-side key-label md-typescale-body-small">##</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="info">
+                            <p id="info-label" class="md-typescale-body-medium">Display Info here</p>
+                        </div>
+                    </div>
+                    <div id="settings-drawer">
+                        <h3>Settings</h3>
+                        <h4>Player One</h4>
+                        <button id="player-1-mode" onclick="changePlayerMode(playerOne)">Select Gamemode</button>
+                        <h4>Player Two</h4>
+                        <button id="player-2-mode" onclick="changePlayerMode(playerTwo)">Select Gamemode</button>
+                        <br>
+                        <button id="close-button" onclick="showSettings()">Hide Settings</button>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
