@@ -13,7 +13,10 @@ const playerOne = {
     side: 'right',
     botRandomPos: 50,
     gotoRandomPos:  false,
-    botSkill: 0.9
+    botSkill: 0.9,
+
+    reference: 'player-1'
+
 };
 
 const playerTwo = {
@@ -31,7 +34,9 @@ const playerTwo = {
     side: 'left',
     botRandomPos: 50,
     gotoRandomPos:  false,
-    botSkill: 0.8
+    botSkill: 0.8,
+
+    reference: 'player-2'
 };
 
 const ball = {
@@ -286,9 +291,13 @@ const calcBotPosition = (player) => {
 const changePlayerMode = (player) => {
     if(player.type === 'human') {
         player.type = 'bot';
+        document.getElementById(player.reference + '-upkey').style.display = 'none';
+        document.getElementById(player.reference + '-downkey').style.display = 'none';
     }
     else if(player.type === 'bot') {
         player.type = 'human';
+        document.getElementById(player.reference + '-upkey').style.display = 'flex';
+        document.getElementById(player.reference + '-downkey').style.display = 'flex';
     }
 }
 
@@ -304,7 +313,7 @@ const showDebug = () => {
 const showSettings = () => {
     settingsShown = !settingsShown;
     if(settingsShown) {
-        document.getElementById('settings-drawer').style.display = 'block';
+        document.getElementById('settings-drawer').style.display = 'flex';
         return;
     }
     document.getElementById('settings-drawer').style.display = 'none';

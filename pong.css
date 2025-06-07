@@ -2,8 +2,11 @@
 /* Top Bar (always visible)*/
 
 #top-bar-background {
+  border-radius: 25px;
   background: var(--md-sys-color-surface-container-highest);
   padding: 5px;
+  margin: 5px;
+  margin-bottom: 0px;
 }
 
 #top-bar-content {
@@ -36,6 +39,11 @@
 
 body {
   margin: 0px;
+  background-color: var(--md-sys-color-background);
+  height: 100%;
+  /*! align-items: stretch; */
+  display: flex;
+  flex-flow: column;
 }
 
 /* //////////////////////////////////////////////////////////////////////////////////////////////////// */
@@ -43,22 +51,27 @@ body {
 #content {
   flex-direction: column;
   align-items: stretch;
-  background-color: var(--md-sys-color-background);
-  /* border: black 1px solid; */
+  /*! border: black 1px solid; */
+  height: 100vh;
 }
 
 #main-content {
-  justify-content: flex-start;
-  flex-grow: 2;
+  justify-content: flex-end;
+  flex-grow: 1;
   padding: 5px;
 
   /* border: black 1px solid; */
+  height: 100%;
+  align-self: auto;
 }
 
 
 #game-and-settings {
   flex-grow: 1;
   /* border: black 1px solid; */
+  height: 100%;
+  display: flex;
+  flex-flow: column;
 }
 
 #game {
@@ -71,6 +84,7 @@ body {
   /* border: black 1px solid; */
   
   background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
   padding: 25px;
   border-radius: 25px;
 }
@@ -146,11 +160,6 @@ body {
   /* border: black 1px solid; */
 }
 
-#settings-drawer {
-  display: none;
-  /* border: black 1px solid; */
-  
-}
 
 #debug-drawer {
   min-width: fit-content;
@@ -177,4 +186,63 @@ body {
   background: var(--md-sys-color-surface-tint);
   border-radius: 20px;
 
+}
+
+/*Settings*/
+
+#settings-drawer {
+  margin: 25px;
+  align-self: stretch;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  display: none;
+  flex-flow: column;
+  
+  border-radius: 25px;
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+  padding: 25px;
+  
+}
+
+#settings-content {
+  display: flex;
+  flex-flow: row;
+}
+
+#settings-headline {
+  margin: 20px;
+  margin-bottom: 0px;
+  margin-top: 10px;
+}
+
+.settings-category {
+  background-color: var(--md-sys-color-secondary-fixed);
+  border: var(--md-sys-color-outline) 1px solid;
+  border-radius: 25px;
+  margin: 20px;
+  padding: 20px;
+  max-width: fit-content;
+  min-width: 150px;
+  flex-grow: 1;
+}
+
+.settings-category-label {
+  margin: 0px;
+}
+
+.settings-combo {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-label {
+  margin-right: 25px;
+}
+
+.playmode-button {
+  text-transform: capitalize;
 }
