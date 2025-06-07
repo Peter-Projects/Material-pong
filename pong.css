@@ -80,9 +80,6 @@ body {
   margin-top: 6%;
   margin-right: auto;
   margin-left: auto;
-  padding: 10px;
-  /* border: black 1px solid; */
-  
   background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
   padding: 25px;
@@ -91,22 +88,17 @@ body {
 
 #playingfield-scores {
   flex-grow: 1;
-  /* border: black 1px solid; */
-  /* background-color: aliceblue; */
-  
 }
 
 .player-side {
   flex-grow: 2;
   flex-direction: column;
   justify-content: space-between;
-  /* border: black 1px solid; */
+
 }
 
 .player-info-bit {
   margin: 10px;
-  /*flex-grow: 1;*/
-  /* border: black 1px solid; */
 } 
 
 .player-1-side {
@@ -119,7 +111,6 @@ body {
 
 .key {
   display: flex;
-  /* border: var(--md-sys-color-outline) solid 1px; */
   margin: 0px;
   flex-grow: 3;
   align-items: center;
@@ -157,19 +148,16 @@ body {
 }
 #info {
   text-align: center;
-  /* border: black 1px solid; */
 }
 
 
 #debug-drawer {
   min-width: fit-content;
   display: none;
-
   padding: 25px;
   background-color: var(--md-sys-color-tertiary);
   color: var(--md-sys-color-on-tertiary);
   border-radius: 25px;
-  /* border: black 1px solid; */
 }
 
 
@@ -185,7 +173,6 @@ body {
 #playingfield {
   background: var(--md-sys-color-surface-tint);
   border-radius: 20px;
-
 }
 
 /*Settings*/

@@ -29,7 +29,7 @@
                         <md-outlined-button class="top-bar-items" id="settings-button" onclick="showSettings()">Settings</md-outlined-button>
                     </div>
                     <div id="top-bar-title">
-                        <h1 class="top-bar-items md-typescale-display-small" id="top-bar-title-text">Pong</h1>
+                        <h1 class="top-bar-items md-typescale-display-small" id="top-bar-title-text">Material-Pong</h1>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                                         <p class="md-typescale-body-medium">Speed up every touch</p>
                                     </div>
                                     <div class="settings-action">
-                                        <md-switch icons show-only-selected-icon></md-switch>
+                                        <md-switch icons show-only-selected-icon id="touch-speedup"></md-switch>
                                     </div>
                                 </div>
                                 <div class="settings-combo flex-box">
@@ -98,7 +98,15 @@
                                         <p class="md-typescale-body-medium">Speed up every point</p>
                                     </div>
                                     <div class="settings-action">
-                                        <md-switch icons show-only-selected-icon></md-switch>
+                                        <md-switch icons show-only-selected-icon id="point-speedup"></md-switch>
+                                    </div>
+                                </div>
+                                <div class="settings-combo flex-box">
+                                    <div class="settings-label">
+                                        <p class="md-typescale-body-medium">Speed</p>
+                                    </div>
+                                    <div class="settings-action">
+                                        <md-elevated-button id="reset-speed" onclick="resetSpeed()">Reset</md-elevated-button>
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +117,23 @@
                                         <p class="md-typescale-body-medium">Type</p>
                                     </div>
                                     <div class="settings-action">
-                                        <md-elevated-button id="player-1-mode" class="playmode-button" onclick="changePlayerMode(playerOne)">Select Gamemode</md-elevated-button>
+                                        <md-elevated-button id="player-1-mode" onclick="changePlayerMode(playerOne)">Select Gamemode</md-elevated-button>
+                                    </div>
+                                </div>
+                                <div class="settings-combo">
+                                    <div class="settings-label">
+                                        <p class="md-typescale-body-medium">Up Key</p>
+                                    </div>
+                                    <div class="settings-action">
+                                        <md-elevated-button id="player-2-upkey-selector" onclick="selectKey(playerOne, 'up')">Select Key</md-elevated-button>
+                                    </div>
+                                </div>
+                                <div class="settings-combo">
+                                    <div class="settings-label">
+                                        <p class="md-typescale-body-medium">Down Key</p>
+                                    </div>
+                                    <div class="settings-action">
+                                        <md-elevated-button id="player-2-upkey-selector" onclick="selectKey(playerOne, 'down')">Select Key</md-elevated-button>
                                     </div>
                                 </div>
                             </div>
@@ -120,7 +144,23 @@
                                         <p class="md-typescale-body-medium">Type</p>
                                     </div>
                                     <div class="settings-action">
-                                        <md-elevated-button id="player-2-mode" class="playmode-button" onclick="changePlayerMode(playerTwo)">Select Gamemode</md-elevated-button>
+                                        <md-elevated-button id="player-2-mode" onclick="changePlayerMode(playerTwo)">Select Gamemode</md-elevated-button>
+                                    </div>
+                                </div>
+                                <div class="settings-combo">
+                                    <div class="settings-label">
+                                        <p class="md-typescale-body-medium">Up Key</p>
+                                    </div>
+                                    <div class="settings-action">
+                                        <md-elevated-button id="player-2-upkey-selector" onclick="selectKey(playerTwo, 'up')">Select Key</md-elevated-button>
+                                    </div>
+                                </div>
+                                <div class="settings-combo">
+                                    <div class="settings-label">
+                                        <p class="md-typescale-body-medium">Down Key</p>
+                                    </div>
+                                    <div class="settings-action">
+                                        <md-elevated-button id="player-2-upkey-selector" onclick="selectKey(playerTwo, 'down')">Select Key</md-elevated-button>
                                     </div>
                                 </div>
                             </div>
