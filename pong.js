@@ -1,46 +1,61 @@
 const playerOne = {
+
+    // game
     pos: 50,
     points: 0,
     speed: 3,
 
+    // appereance
     length: 80,
     width: 4,
-    color: 'lightblue',
+    color: 'red',
+    side: 'left',
     
-    type: "human", // human or bot
-    upkey: 'ArrowUp',
-    upkeyPressed: false,
-    downkey: 'ArrowDown',
-    downkeyPressed: false,
-    side: 'right',
-    botRandomPos: 50,
-    gotoRandomPos:  false,
-    botSkill: 0.9,
-
-    reference: 'player-1',
-    name: 'player one'
-
-};
-
-const playerTwo = {
-    pos: 50,
-    points: 0,
-    speed: 3,
-
-    length: 80,
-    width: 4,
-    color: 'lightblue',
-    
-    type: "human",
+    // controll
     upkey: 'KeyW',
     upkeyPressed: false,
     downkey: 'KeyS',
     downkeyPressed: false,
-    side: 'left',
-    botRandomPos: 50,
-    gotoRandomPos:  false,
-    botSkill: 0.8,
 
+    // bot
+    type: "human", // human or bot
+    botThreshold: 25, // line, the ball has to cross for the bot to move. from the player, direction middle
+    botFollow: false,
+    botNetxtPos: 0,
+    botSkill: 0.2, // lower the better
+
+    // internal
+    reference: 'player-1',
+    name: 'player one'
+};
+
+const playerTwo = {
+
+    // game
+    pos: 50,
+    points: 0,
+    speed: 3,
+
+    // appereance
+    length: 80,
+    width: 4,
+    color: 'red',
+    side: 'right',
+    
+    // controll
+    upkey: 'ArrowUp',
+    upkeyPressed: false,
+    downkey: 'ArrowDown',
+    downkeyPressed: false,
+
+    // bot
+    type: "human",
+    botThreshold: 25, // line, the ball has to cross for the bot to move. from the player, direction middle
+    botFollow: false,
+    botNetxtPos: 0,
+    botSkill: 0.2,
+
+    // internal
     reference: 'player-2',
     name: 'player two'
 };
@@ -57,25 +72,29 @@ const ball = {
 
     radius: 18,
     color: 'red',
-    speed: 2,
+    speed: 1,
 
     // speedup
     useTouchSpeedup: false,
     touchSpeedup: 0.1,
     pevTouchSpeed: 2,
+
     usePointSpeedup: false,
     pointSpeedup: 0.2,
+
     originalSpeed: 2
 }
 
 const field = {
-    margin: 5
+    marginRL: 3,
+    marginTB: 15,
+    infoText: 'k'
 }
 
 const awaitKeyInput =  {
     state: false,
     player: playerOne,
-    type: 'up'
+    type: 'up' // or down
 }
 
 let ctx;
@@ -99,13 +118,13 @@ const onKeyDown = (event) => {
             awaitKeyInput.player.downkey = event.code;
         }
         awaitKeyInput.state = false;
+        field.infoText = '';
         return;
     }
 
     // starting game
     if(paused) {
         started = true;
-        return;
     }
 
     // activating the inputs for continuous input
@@ -154,19 +173,20 @@ const onKeyUp = (event) => {
     }
 }
 
+const startGame = () => {
+    field.infoText = '';
+
+    ball.dir.x = randomDirection();
+    ball.dir.y = randomDirection();
+
+    started = false;
+    paused = false;
+}
+
 const update = () => {
 
     if(started) {
-        
-        // "start" game
-        infoLabel.style.display = 'none';
-        infoLabel.innerText = '';
-
-        ball.dir.x = randomDirection();
-        ball.dir.y = randomDirection();
-
-        started = false;
-        paused = false;
+        startGame();
     }
 
     if (playerOne.type === 'human') {
@@ -178,75 +198,90 @@ const update = () => {
             playerOne.pos += playerOne.speed;
         }
     }
-
+    
     if(playerTwo.type === 'human') {
         if(playerTwo.upkeyPressed) {
             playerTwo.pos -= playerTwo.speed;
         }
-
+        
         if(playerTwo.downkeyPressed) {
             playerTwo.pos += playerTwo.speed;
         }
     }
+    
     if(playerOne.type === 'bot') {
         calcBotPosition(playerOne);
     }
-
+    
     if(playerTwo.type === 'bot') {
         calcBotPosition(playerTwo);
     }
 
-    fieldCheck(playerOne, 'all');
-    fieldCheck(playerTwo, 'all');
+    ball.pos.x += ball.dir.x * ball.speed;
+    ball.pos.y += ball.dir.y * ball.speed;
 
+    // player doesn't hit ball, point
     if(ball.pos.x - ball.radius <= 0) {
         playerTwo.points++;
         startScreen();
     }
-
+    
     if(ball.pos.x + ball.radius >= ctx.canvas.width) {
         playerOne.points++;
         startScreen();
     }
     
+    // ball bounces off top and bottom wall
     if(ball.pos.y + ball.radius >= ctx.canvas.height) {
         ball.dir.y = -1;
     }
-
+    
     if(ball.pos.y - ball.radius <= 0) {
         ball.dir.y = 1;
     }
-    
-    ball.pos.x += ball.dir.x * ball.speed;
-    ball.pos.y += ball.dir.y * ball.speed;
 
+    // player hits ball
     if(playerCollide(playerOne)) {
         ball.dir.x = 1;
         if(ball.useTouchSpeedup) {
             ball.speed += ball.touchSpeedup;
         }
+        playerOne.botFollow = false;
+        calcBotTheshold(playerTwo);
+        console.log('Player one collided');
     }
     if(playerCollide(playerTwo)) {
         ball.dir.x = -1;
         if(ball.useTouchSpeedup) {
             ball.speed += ball.touchSpeedup;
         }
+        playerTwo.botFollow = false;
+        calcBotTheshold(playerOne);
+        console.log('Player two collided');
+
+    }
+    
+    if(awaitKeyInput.state) {
+        field.infoText = `Press Key to set the ${awaitKeyInput.type}-key for ${awaitKeyInput.player.name}!`;
     }
 
+    fieldCheck(playerOne, 'all');
+    fieldCheck(playerTwo, 'all');
+    
     draw();
     window.requestAnimationFrame(update);
 }
 
 // ensures players are inside field, if not sets them on the side they wanted to "escape"
-const fieldCheck = (player, mode) => {
+const fieldCheck = (player) => {
     
-    if(player.pos <= 0 + field.margin && (mode === 'up' || mode === 'all')) {
-        player.pos = 0 + field.margin;
+    if(player.pos <= 0 + field.marginTB) {
+        player.pos = 0 + field.marginTB;
         return;
     }
-
-    if(player.pos + player.length >= ctx.canvas.height - field.margin && (mode === 'down' || mode === 'all')) {
-        player.pos = ctx.canvas.height - field.margin - player.length;
+    
+    if(player.pos + player.length >= ctx.canvas.height - field.marginTB) {
+        player.pos = ctx.canvas.height - field.marginTB - player.length;
         return;
     }
 }
@@ -254,8 +289,8 @@ const fieldCheck = (player, mode) => {
 const playerCollide = (player) =>{
 
     // player 1
-    if(player.side === 'right') {
-        if(ball.pos.x - ball.radius <= 0 + field.margin + player.width) { // ball would touch bar on the side
+    if(player.side === 'left') {
+        if(ball.pos.x - ball.radius <= 0 + field.marginRL + player.width) { // ball would touch bar on the side
             if(ball.pos.y + ball.radius > player.pos && ball.pos.y - ball.radius < player.pos + player.length) { // ball "inside" player
                 return true;
             }
@@ -263,8 +298,8 @@ const playerCollide = (player) =>{
     }
 
     // player 2
-    if(player.side === 'left') {
-        if(ball.pos.x + ball.radius >= ctx.canvas.width - field.margin - player.width) {
+    if(player.side === 'right') {
+        if(ball.pos.x + ball.radius >= ctx.canvas.width - field.marginRL - player.width) {
             if(ball.pos.y + ball.radius > player.pos && ball.pos.y - ball.radius < player.pos + player.length) {
                 return true;
             }
@@ -284,13 +319,24 @@ const startScreen = () => {
     ball.pos.y = ctx.canvas.height / 2;
     ball.dir.x = 0;
     ball.dir.y = 0;
-    infoLabel.style.display = 'inline';
-    infoLabel.innerText = 'To start game, press any key!';
 
-    // speed conroll
-    if(ball.useTouchSpeedup) {
+    field.infoText = 'To start game, press any key!';
+
+    // speed controll
+    if(ball.usePointSpeedup) {
         ball.prevPointSpeed += ball.pointSpeedup;
-        ball.speed = ball.prevPointSpeed; 
+    }
+    ball.speed = ball.prevPointSpeed; 
+    
+    // bot
+    playerOne.botFollow = false;
+    playerTwo.botFollow = false;
+    calcBotTheshold(playerOne);
+    calcBotTheshold(playerTwo);
+
+    // auto start
+    if(playerOne.type === 'bot' && playerTwo.type === 'bot') {
+        startGame();
     }
 }
 
@@ -303,13 +349,13 @@ const draw = () => {
     // player one
     ctx.beginPath();
     ctx.fillStyle = playerOne.color;
-    ctx.roundRect(field.margin, playerOne.pos, playerOne.width, playerOne.length, playerOne.width / 2)
+    ctx.roundRect(field.marginRL, playerOne.pos, playerOne.width, playerOne.length, playerOne.width / 2)
     ctx.fill();
     
     // player two
     ctx.beginPath();
     ctx.fillStyle = playerTwo.color;
-    ctx.roundRect(ctx.canvas.width - field.margin - playerTwo.width, playerTwo.pos , playerTwo.width, playerTwo.length, playerTwo.width / 2);
+    ctx.roundRect(ctx.canvas.width - field.marginRL - playerTwo.width, playerTwo.pos , playerTwo.width, playerTwo.length, playerTwo.width / 2);
     ctx.fill();
 
     // ball
@@ -336,22 +382,64 @@ const draw = () => {
     document.getElementById('player-1-downkey-label').innerText = playerOne.downkey;
     document.getElementById('player-2-upkey-label').innerText = playerTwo.upkey;
     document.getElementById('player-2-downkey-label').innerText = playerTwo.downkey;
-    
-    // keybindings info
-    if(awaitKeyInput.state) {
-        infoLabel.style.display = 'inline';
-        infoLabel.innerText = `Press Key to set the ${awaitKeyInput.type}-key as controll for ${awaitKeyInput.player.name}!`;
-    }
 
+    // info
+    if(field.infoText === '') {
+        infoLabel.style.display = 'none';
+        infoLabel.innerText = '';
+    }
+    else {
+        infoLabel.style.display = 'inline';
+        infoLabel.innerText = field.infoText;
+    }
+    
     //------DEBUG---------//
     if(debugShown) {
-        document.getElementById('general-info').innerText = `Field margin: ${field.margin}`;
-        document.getElementById('ball-info').innerText = `Speed: ${Math.round(ball.speed * 10) / 10}\nPos: x:${Math.round(ball.pos.x * 10) / 10} y:${Math.round(ball.pos.y * 10) / 10}\nDirection: x${ball.dir.x} y:${ball.dir.y}\nRadius: ${ball.radius}\nUse touch speedup: ${ball.useTouchSpeedup}\nTouch speedup: ${ball.touchSpeedup}\nUse point speedup: ${ball.usePointSpeedup}\nPoint speedup ${ball.pointSpeedup}\nPrev point speed: ${Math.round(ball.prevPointSpeed * 10) / 10}\nOriginal speed: ${Math.round(ball.originalSpeed * 10) / 10}`;
-        document.getElementById('player-1-info').innerText = `Position: ${Math.round(playerOne.pos)}\nPoints: ${playerOne.points}\nSpeed: ${playerOne.speed}\nLenght: ${playerOne.length}\nWidth: ${playerOne.width}\nType: ${playerOne.type}\nUp-Key: '${playerOne.upkey}'\nDown-Key: '${playerOne.downkey}'\nBot:\nRandom Position: ${Math.round(playerOne.botRandomPos)}\nGoto random Position: ${playerOne.gotoRandomPos}\nSkill: ${playerOne.botSkill}\nDownkey pressed: ${playerOne.downkeyPressed}\nUpkey pressed: ${playerOne.upkeyPressed}`;
-        document.getElementById('player-2-info').innerText = `Position: ${Math.round(playerTwo.pos)}\nPoints: ${playerTwo.points}\nSpeed: ${playerTwo.speed}\nLenght: ${playerTwo.length}\nWidth: ${playerTwo.width}\nType: ${playerTwo.type}\nUp-Key: '${playerTwo.upkey}'\nDown-Key: '${playerTwo.downkey}'\nBot:\nRandom Position: ${Math.round(playerTwo.botRandomPos)}\nGoto random Position: ${playerTwo.gotoRandomPos}\nSkill: ${playerTwo.botSkill}`;
+        document.getElementById('general-info').innerText = `Field margin RL: ${field.marginRL}
+            Field margin TB: ${field.marginTB}`;
+        document.getElementById('ball-info').innerText = `Speed: ${Math.round(ball.speed * 10) / 10}
+            Pos: x:${Math.round(ball.pos.x * 10) / 10} y:${Math.round(ball.pos.y * 10) / 10}
+            Direction: x${ball.dir.x} y:${ball.dir.y}
+            Radius: ${ball.radius}\nUse touch speedup: ${ball.useTouchSpeedup}
+            Touch speedup: ${ball.touchSpeedup}
+            Use point speedup: ${ball.usePointSpeedup}
+            Point speedup ${ball.pointSpeedup}
+            Prev point speed: ${Math.round(ball.prevPointSpeed * 10) / 10}
+            Original speed: ${Math.round(ball.originalSpeed * 10) / 10}`;
+        
+        document.getElementById('player-1-info').innerText = `Position: ${Math.round(playerOne.pos)}
+            Points: ${playerOne.points}
+            Speed: ${playerOne.speed}
+            Lenght: ${playerOne.length}
+            Width: ${playerOne.width}
+            Up-key: '${playerOne.upkey}'
+            Down-key: '${playerOne.downkey}'
+            Up-key pressed: ${playerOne.upkeyPressed}
+            Down-key pressed: ${playerOne.downkeyPressed}
+            
+            Type: ${playerOne.type}
+            Bot threshold: ${playerOne.botThreshold}
+            Bot follow: ${playerOne.botFollow}
+            Skill: ${playerOne.botSkill}
+            `;
+
+        document.getElementById('player-2-info').innerText = `Position: ${Math.round(playerTwo.pos)}
+            Points: ${playerTwo.points}
+            Speed: ${playerTwo.speed}
+            Lenght: ${playerTwo.length}
+            Width: ${playerTwo.width}
+            Up-Key: '${playerTwo.upkey}'
+            Down-Key: '${playerTwo.downkey}'
+            Up-key pressed:${playerTwo.upkeyPressed}
+            Down-key pressed: ${playerTwo.downkeyPressed}
+            
+            Type: ${playerTwo.type}
+            Bot threshold: ${playerTwo.botThreshold}
+            Bot follow: ${playerTwo.botFollow}
+            Skill: ${playerTwo.botSkill}
+            `;
     }
 }
-
 
 const init = () => {
     // often used elemets
@@ -387,31 +475,35 @@ const randomDirection = () => {
 
 const calcBotPosition = (player) => {
 
-    if (!player.gotoRandomPos && Math.random() >= player.botSkill) {
-      player.botRandomPos = (Math.random() * (ctx.canvas.height - (field.margin * 2) - player.length) + field.margin);
-      player.gotoRandomPos = true;
-    }
-    if(player.gotoRandomPos) {
-        if(player.pos <= player.botRandomPos + 2 && player.pos >= player.botRandomPos - 2) { // player is inside random position
-            player.gotoRandomPos = false;
+    if(player.side === 'left') {
+        if(ball.pos.x < player.botThreshold + field.marginRL + player.width) {
+            player.botFollow = true;
+            player.botNetxtPos = ball.pos.y - (player.length / 2)
+            player.botThreshold = -1000; // outside playingfield 
         }
+    }
 
-        if(player.pos < player.botRandomPos) {
-            player.pos += player.speed / 6;
-        }
-        
-        else if (player.pos > player.botRandomPos) {
-            player.pos -= player.speed / 6;
-        }
-    }
-    else {
-        if(player.pos + (player.length / 2) - 2 > ball.pos.y) {
-            player.pos -= player.speed / 5;
-        }
-        else if (player.pos + (player.length / 2) + 2 < ball.pos.y) {
-            player.pos += player.speed / 5;
+    if(player.side === 'right') {
+        if(ball.pos.x > ctx.canvas.width - (player.botThreshold +  field.marginRL + player.width)) {
+            player.botFollow = true;
+            player.botNetxtPos = ball.pos.y - (player.length / 2)
+            player.botThreshold = -1000; // outside playingfield 
         }
     }
+
+    if(player.botFollow === true) {
+
+        if(player.pos - 2 > player.botNetxtPos) {
+            player.pos -= player.speed;
+        }
+        else if (player.pos + 2 < player.botNetxtPos) {
+            player.pos += player.speed;
+        }
+    }
+}
+
+const calcBotTheshold = (player) => {
+    player.botThreshold = Math.round(Math.random() * (player.botSkill * ctx.canvas.width));
 }
 
 const changePlayerMode = (player) => {
