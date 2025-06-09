@@ -1,11 +1,32 @@
+/* Copyright (c) 2025 Peter Pany */
+
+/* General */
+
+.flex-box {
+  display: flex;
+}
+
+body {
+  margin: 0px;
+  background-color: var(--md-sys-color-background);
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+#content {
+  flex-direction: column;
+  align-items: stretch;
+  /*! border: black 1px solid; */
+  height: 100vh;
+}
 
 /* Top Bar (always visible)*/
 
 #top-bar-background {
-  border-radius: 25px;
   background: var(--md-sys-color-surface-container-highest);
+  color: var(--md-sys-color-on-surface);
   padding: 5px;
-  margin: 5px;
   margin-bottom: 0px;
 }
 
@@ -17,9 +38,9 @@
 }
 
 #top-bar-buttons {
+  height: fit-content;
   text-align: left;
   flex-grow: 1;
-  height: fit-content;
 }
 
 #top-bar-title {
@@ -30,41 +51,19 @@
 
 #top-bar-title h1{
   margin: 0px;
-  color: var(--md-sys-color-on-surface-variant)
 }
 
-.flex-box {
-  display: flex;
-}
-
-body {
-  margin: 0px;
-  background-color: var(--md-sys-color-background);
-  height: 100%;
-  /*! align-items: stretch; */
-  display: flex;
-  flex-flow: column;
-}
-
-/* //////////////////////////////////////////////////////////////////////////////////////////////////// */
-
-#content {
-  flex-direction: column;
-  align-items: stretch;
-  /*! border: black 1px solid; */
-  height: 100vh;
-}
+/* Main content */
 
 #main-content {
   justify-content: flex-end;
   flex-grow: 1;
   padding: 5px;
-
-  /* border: black 1px solid; */
   height: 100%;
   align-self: auto;
 }
 
+/* Game */
 
 #game-and-settings {
   flex-grow: 1;
@@ -77,13 +76,23 @@ body {
 #game {
   flex-direction: column;
   width: fit-content;
-  margin-top: 6%;
+  margin-top: 4%;
   margin-right: auto;
   margin-left: auto;
   background-color: var(--md-sys-color-secondary-container);
   color: var(--md-sys-color-on-secondary-container);
   padding: 25px;
   border-radius: 25px;
+}
+
+#playingfield {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  border-radius: 20px;
 }
 
 #playingfield-scores {
@@ -109,18 +118,18 @@ body {
   margin-right: auto;
 }
 
-.key {
-  display: flex;
-  margin: 0px;
-  flex-grow: 3;
-  align-items: center;
-}
-
 .score {
   display: flex;
   align-items: center;
   padding: 10px;
   flex-grow: 2;
+}
+
+.key {
+  display: flex;
+  margin: 0px;
+  flex-grow: 3;
+  align-items: center;
 }
 
 .key-label {
@@ -140,16 +149,12 @@ body {
 .key-label.player-2-side {
   text-align: left;
 }
-#playingfield {
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 0px;
-  margin-bottom: opx;
-}
+
 #info {
   text-align: center;
 }
 
+/* Debug info */
 
 #debug-drawer {
   min-width: fit-content;
@@ -160,7 +165,6 @@ body {
   border-radius: 25px;
 }
 
-
 #debug-drawer h4 {
   margin: 0px;
   margin-top: 15px;
@@ -168,11 +172,6 @@ body {
 
 #debug-drawer p, h3 {
   margin: 0px;
-}
-
-#playingfield {
-  background: var(--md-sys-color-surface-tint);
-  border-radius: 20px;
 }
 
 /*Settings*/
@@ -193,19 +192,18 @@ body {
   
 }
 
-#settings-content {
-  display: flex;
-  flex-flow: row;
-}
-
 #settings-headline {
   margin: 20px;
   margin-bottom: 0px;
   margin-top: 10px;
 }
 
+#settings-content {
+  display: flex;
+  flex-flow: row;
+}
+
 .settings-category {
-  background-color: var(--md-sys-color-secondary-fixed);
   border: var(--md-sys-color-outline) 1px solid;
   border-radius: 25px;
   margin: 20px;
@@ -232,4 +230,9 @@ body {
 
 .playmode-button {
   text-transform: capitalize;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
 }

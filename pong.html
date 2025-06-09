@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2025 Peter Pany -->
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -29,7 +30,7 @@
                         <md-outlined-button class="top-bar-items" id="settings-button" onclick="showSettings()">Settings</md-outlined-button>
                     </div>
                     <div id="top-bar-title">
-                        <h1 class="top-bar-items md-typescale-display-small" id="top-bar-title-text">Material-Pong</h1>
+                        <h1 class="top-bar-items md-typescale-display-small" id="top-bar-title-text">"Material"-Pong</h1>
                     </div>
                 </div>
             </div>
@@ -60,7 +61,7 @@
                                 </div>
                             </div>
                             <div id="canvas">
-                                <canvas id="playingfield" height="300" width="520">Sorry, your Browser doesn't support the HTML5 canvas</canvas>
+                                <canvas id="playingfield" height="500" width="770">Sorry, your Browser doesn't support the HTML5 canvas</canvas>
                             </div>
                             <div class="player-side flex-box">
                                 <div id="player-2-upkey" class="key">
@@ -109,6 +110,14 @@
                                         <md-elevated-button id="reset-speed" onclick="resetSpeed()">Reset</md-elevated-button>
                                     </div>
                                 </div>
+                                <div class="settings-combo flex-box">
+                                    <div class="settings-label">
+                                        <p class="md-typescale-body-medium">Points</p>
+                                    </div>
+                                    <div class="settings-action">
+                                        <md-elevated-button id="reset-points" onclick="resetPoints()">Reset</md-elevated-button>
+                                    </div>
+                                </div>
                             </div>
                             <div id="player-1-settings" class="settings-category">
                                 <h4 class="md-typescale-title-medium settings-category-label">Player One</h4>
@@ -117,7 +126,7 @@
                                         <p class="md-typescale-body-medium">Type</p>
                                     </div>
                                     <div class="settings-action">
-                                        <md-elevated-button id="player-1-mode" onclick="changePlayerMode(playerOne)">Select Gamemode</md-elevated-button>
+                                        <md-elevated-button id="player-1-mode" onclick="changePlayerMode(playerOne)" class="playmode-button">Select Gamemode</md-elevated-button>
                                     </div>
                                 </div>
                                 <div class="settings-combo">
@@ -144,7 +153,7 @@
                                         <p class="md-typescale-body-medium">Type</p>
                                     </div>
                                     <div class="settings-action">
-                                        <md-elevated-button id="player-2-mode" onclick="changePlayerMode(playerTwo)">Select Gamemode</md-elevated-button>
+                                        <md-elevated-button id="player-2-mode" onclick="changePlayerMode(playerTwo)" class="playmode-button">Select Gamemode</md-elevated-button>
                                     </div>
                                 </div>
                                 <div class="settings-combo">
@@ -169,6 +178,9 @@
                     </div>
                 </div>
             </div>
+            <footer>
+                <a href="https://github.com/Peter-Projects/Material-pong/" target="_blank" class="md-typescale-body-medium">GitHub</a>
+            </footer>
         </div>
     </body>
 </html>
