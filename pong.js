@@ -467,16 +467,16 @@ const onKeyDown = (event) => {
 
         if(event.code === playerTwo.downkey) {
             playerTwo.downkeyPressed = true;
-            
+            starting = true;
         }
+    }
+
+    if(playerOne.type === 'bot' && playerTwo.type === 'bot') {
+        starting = true;
     }
 
     if(paused && starting) {
         started = true;
-    }
-
-    if(playerOne.type === 'bot' && playerTwo.type === 'bot') {
-        startGame();
     }
 }
 
